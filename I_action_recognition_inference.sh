@@ -1,5 +1,5 @@
 CONFIG_PATH="I_action_recognition/AR_CONFIG.yaml"
-CHECK_POINT="I_action_recognition/action_recognition_model.pyth"
+CHECK_POINT="models/action_recognition_model.pyth"
 #-------------------------
 
 mkdir -p $OUTPUT_DIR

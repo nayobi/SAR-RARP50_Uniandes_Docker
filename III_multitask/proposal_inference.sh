@@ -1,7 +1,7 @@
 #/usr/bin/sh
 
 CONFIG_PATH="III_multitask/region_proposals/S_CONFIG.yaml"
-CHECK_POINT="III_multitask/region_proposals/segmentation_model.pth"
+CHECK_POINT="models/region_proposal_model.pth"
 #-------------------------
 
 python -W ignore III_multitask/region_proposals/test_net.py \

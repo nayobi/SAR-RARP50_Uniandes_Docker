@@ -1,7 +1,7 @@
 #/usr/bin/sh
 
 CONFIG_PATH="II_segmentation/S_CONFIG.yaml"
-CHECK_POINT="II_segmentation/segmentation_model.pth"
+CHECK_POINT="models/segmentation_model.pth"
 #-------------------------
 
 mkdir -p $OUTPUT_DIR

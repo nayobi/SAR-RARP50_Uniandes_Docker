@@ -1,5 +1,5 @@
 CONFIG_PATH="III_multitask/multitask_recognition/MT_CONFIG.yaml"
-CHECK_POINT="III_multitask/multitask_recognition/multitask_recognition_model.pyth"
+CHECK_POINT="models/multitask_recognition_model.pyth"
 #-------------------------
 
 
