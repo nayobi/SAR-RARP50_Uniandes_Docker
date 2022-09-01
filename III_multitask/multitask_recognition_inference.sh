@@ -7,8 +7,7 @@ python III_multitask/multitask_recognition/format_videos.py $TEST_DIR $OUTPUT_DI
 
 python -W ignore III_multitask/multitask_recognition/run_net.py \
 --cfg $CONFIG_PATH \
-NUM_GPUS 1 \
-DATA_LOADER.NUM_WORKERS 5 \
-TEST.BATCH_SIZE 9 \
+DATA_LOADER.NUM_WORKERS $WORKERS \
+TEST.BATCH_SIZE $BATCH \
 TEST.CHECKPOINT_FILE_PATH $CHECK_POINT \
 OUTPUT_DIR $OUTPUT_DIR

@@ -105,7 +105,7 @@ def main(args):
         if args.num_gpus>0:
             model.cuda()
         dataset = Loader(os.getenv('TEST_DIR'))
-        inference_set = torch.utils.data.DataLoader(dataset, batch_size=cfg.SOLVER.IMS_PER_BATCH, num_workers=cfg.DATALOADER.NUM_WORKERS, pin_memory=True, collate_fn=collate_funxt)
+        inference_set = torch.utils.data.DataLoader(dataset, batch_size=int(cfg.SOLVER.IMS_PER_BATCH), num_workers=int(cfg.DATALOADER.NUM_WORKERS), pin_memory=True, collate_fn=collate_funxt)
         model.eval()
         box_count = 0
         for inputs in tqdm(inference_set,desc='Instrument regions predictions...'):

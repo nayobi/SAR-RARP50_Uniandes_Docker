@@ -62,7 +62,7 @@ def construct_loader(cfg, split, is_precise_bn=False):
         loader = torch.utils.data.DataLoader(
             dataset,
             batch_size=batch_size,
-            num_workers=cfg.DATA_LOADER.NUM_WORKERS,
+            num_workers=int(cfg.DATA_LOADER.NUM_WORKERS),
             pin_memory=cfg.DATA_LOADER.PIN_MEMORY,
             drop_last=drop_last,
             collate_fn=detection_collate if cfg.DETECTION.ENABLE else None,
@@ -82,7 +82,7 @@ def construct_loader(cfg, split, is_precise_bn=False):
             batch_size=batch_size,
             shuffle=(False if sampler else shuffle),
             sampler=sampler,
-            num_workers=cfg.DATA_LOADER.NUM_WORKERS,
+            num_workers=int(cfg.DATA_LOADER.NUM_WORKERS),
             pin_memory=cfg.DATA_LOADER.PIN_MEMORY,
             drop_last=drop_last,
             collate_fn=collate_func,
