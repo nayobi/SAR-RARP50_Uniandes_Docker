@@ -73,7 +73,7 @@ python inference.py /data_dir/test_dir /data_dir/out_dir \
 And that's all!. 
 The inference codes are set to perform inference with PyTorch on GPUs. We set the inference to use only one GPU to avoid parallelization or CUDA errors. As stated previously, the batch size and the number of workers can be modified with the input parameters; make sure to use the correct values to avoid out-of-memory errors. 
 
-# Running the code without docker
+## Running the code without docker
 
 The process is similar if you wish to run the code without the docker. However, you first will have to install all the requirements. The main requirements are:
 - Python >= 3.8
