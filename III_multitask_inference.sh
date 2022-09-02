@@ -10,6 +10,6 @@ do
 done
 
 
-sh III_multitask/proposal_inference.sh
+# sh III_multitask/proposal_inference.sh
 
 sh III_multitask/multitask_recognition_inference.sh

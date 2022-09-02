@@ -39,7 +39,7 @@ for task in tasks:
         run(['sh','II_segmentation_inference.sh'])
 
     elif task == 'multitask':
-        run(['sh','make.sh'])
+        # run(['sh','make.sh'])
         run(['sh','III_multitask_inference.sh'])
     elif task=='':
         print('Empty task !')

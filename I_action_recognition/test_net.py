@@ -35,7 +35,7 @@ def postprocesses_n_save(preds_dict,cfg):
             scores = np.array(scores)
 
             #Noise filtering by replacing frame neighbour with higher scores
-            for _ in tqdm(range(100),desc='{} noise postprocessing ...'.format(video)):
+            for _ in tqdm(range(250),desc='{} noise postprocessing ...'.format(video)):
                 new_scores = copy(scores)
                 new_preds = copy(cat_preds)
                 for idx in range(1,len(scores)-1):

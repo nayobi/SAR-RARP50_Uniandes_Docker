@@ -36,7 +36,7 @@ def postprocesses_n_save(preds_dict,cfg):
 
         scores = np.array(scores)
         #Noise filtering by replacing frame neighbour with higher scores
-        for _ in tqdm(range(0),desc='{} postprocessing ...'.format(video)):
+        for _ in tqdm(range(250),desc='{} postprocessing ...'.format(video)):
             new_scores = copy(scores)
             new_preds = copy(cat_preds)
             for idx in range(1,len(scores)-1):
@@ -101,7 +101,6 @@ def getrealbox(boxes,box):
     """
     maxiou = 0
     realbox = ''
-    box = floatbox(box)
     for box2 in boxes:
         iou = boxiou(floatbox(box2),box)
         if iou>maxiou:
@@ -127,17 +126,15 @@ def saveSegments(preds,cfg):
                     sem_im = np.zeros((1080,1920))
                     all_segmets = []
                     for bbox,box_pred in zip(image[0],image[1]):
-                        category = np.argmax(box_pred)
-                        score = box_pred[category]
-                        real_box = getrealbox(feat['bboxes'].keys(),'{} {} {} {}'.format(bbox[0],bbox[1],bbox[2],bbox[3]))
-                        if feat['score'][real_box] > score:
-                            category = feat['category'][real_box]
-                            score = feat['score'][real_box]
+                        if bbox != [0.0,0.0,0.0,0.0]:
+                            category = np.argmax(box_pred)
+                            score = box_pred[category]
+                            real_box = getrealbox(feat['bboxes'].keys(),bbox)
 
-                        if category<9:
-                            #Box values are not exactly the same so the real box must be found with IoU
-                            segment = feat['segments'][real_box]
-                            all_segmets.append((category+1,segment,score))
+                            if category<9:
+                                #Box values are not exactly the same so the real box must be found with IoU
+                                segment = feat['segments'][real_box]
+                                all_segmets.append((category+1,segment,score))
                     all_segmets.sort(key=lambda x: x[2])
 
                     sem_im = np.zeros((1080,1920))
