@@ -6,7 +6,7 @@
 - **Affiliation**: University of Los Andes - Center for Research and Formation in Artificial Intelligence (CinfonIA)
 - **Contact email**: n.ayobi@uniandes.edu.co
 - **Challenge**: SAR-RARP50
-- **Participating Sub-Challenges**: Action Recognition, Instrument Segmentation & Multitask (AR + IS)
+- **Participating Sub-Challenges**: Action Recognition, Instrument Segmentation & Multitask.
 
 ## Introduction
 Hello!
@@ -18,7 +18,7 @@ and both at the time.
 
 ## Running the docker:
 
-First, you need to have the docker image. The image can be taken from https://www.mydrive.com. Alternatively, you can build the docker image with this repository. First, you'll need to download all the model weights at https://www.mydrive.com and place them in a directory named "models" in this repository's main directory. After that, you can build the image by entering the main directory and running
+First, you need to have the docker image. The image can be taken from https://drive.google.com/drive/folders/107NVWt-2bTZMj8dO87D2M41RKGHqfA4L?usp=sharing. Alternatively, you can build the docker image with this repository. First, you'll need to download all the model weights at https://drive.google.com/drive/folders/107NVWt-2bTZMj8dO87D2M41RKGHqfA4L?usp=sharing and place them in a directory named "models" in this repository's main directory. After that, you can build the image by entering the main directory and running
 ```sh
 docker image build �t <tag-name> .
 ```
@@ -44,29 +44,38 @@ test_dir:
 |              |--000000012.png
 ...            ...
 ```
-2) ```out_dir``` ["output directory"]: (Mandatory) This is the directory where to deposit the inference files for the task. If the directory doesn't exist, then it will be created. For each directory or file in the test directory, the code will create a directory with the same name inside the output directory. Then, the prediction files with the expected format for each video will be put inside its corresponding video path in the output directory. Some additional directories will be created containing the necessary files for the code to run. Make sure to have the proper permissions on the parent directory of the output directory to avoid permission errors.
+2) ```out_dir``` ["output directory"]: (Mandatory) This is the directory where to deposit the inference files for the task. If the directory doesn't exist, then it will be created. The inference code will create a new directory inside the output path for each directory in the test path that has a child directory named "rgb" (a directory for each video directory in the test path). Then, the prediction files with the expected format for each video will be put inside its corresponding video path in the output directory. Some additional directories will be created containing the necessary files for the code to run. Make sure to have the proper permissions on the parent directory of the output directory to avoid permission errors. Consider that if the test directory and the output directory are the same, there is a chance that the files on the test directory are overwritten (specifically annotation files).
 
-3) ```--tasks``` (Optional) This argument specifies which tasks to perform. The possible values tasks are "action_recognition", "segmentation", and "multitask." In this case, the tasks must be input as a single string where all the tasks to perform are separated by a comma (","). For example, inputting "segmentation,multitask" will perform instrument segmentation inference and then multitask inference on the test data. In the same way, "action_recognition" will only perform action recognition inference. All the 15 possible permutations of the tasks are set in the choices of the argument to avoid errors. Please bare in mind that **IF YOU CHOOSE TO PERFORM AN INDIVIDUAL TASK INFERENCE FOLLOWED BY A MULTITASK INFERENCE ON THE SAME OUTPUT DIRECTORY, THEN THE PREDICTION FILES OF THE INDIVIDUAL TASKS WILL BE OVERWRITTEN BY THE PREDICTIONS OF THE MULTITASK. THEREFORE, WE STRONGLY RECOMMEND NOT TO SET THIS ARGUMENT TO ANY COMBINATION OF THE THREE POSSIBLE TASKS.** Instead, we recommend performing any combination of the individual tasks (i.e. --tasks "action_recognition,segmentation") on one output directory and only the multitask inference (--tasks "multitask") on another directory.
+3) ```--tasks``` (Optional) This argument specifies which tasks to perform. The possible values tasks are "action_recognition", "segmentation", and "multitask." In this case, the tasks must be input as a single string where all the tasks to perform are separated by a comma (","). For example, inputting ```--tasks segmentation,multitask``` will perform instrument segmentation inference and then multitask inference on the test data. In the same way, ```--tasks action_recognition``` will only perform action recognition inference. All the 15 possible permutations of the tasks are set in the choices of the argument to avoid errors. Please bare in mind that **IF YOU CHOOSE TO PERFORM AN INDIVIDUAL TASK INFERENCE FOLLOWED BY A MULTITASK INFERENCE ON THE SAME OUTPUT DIRECTORY, THEN THE PREDICTION FILES OF THE INDIVIDUAL TASKS WILL BE OVERWRITTEN BY THE PREDICTIONS OF THE MULTITASK. THEREFORE, WE STRONGLY RECOMMEND NOT TO SET THIS ARGUMENT TO ANY COMBINATION OF THE THREE POSSIBLE VALUES.** Instead, we recommend performing the individual tasks (i.e. ```--tasks "action_recognition,segmentation"```) on one output directory and then only the multitask inference (```--tasks multitask```) on another directory.
 
-4) ```--batch_size``` (Optional) This argument specifies the batch size for inference. The default value is X which is enough to fit in a X GPU. Please modify this parameter according to your GPU resources. The inference speed can vary significantly with this argument. The next table specifies the GPU expense of different batch size values. 
+4) ```--batch_size``` (Optional) This argument specifies the batch size for inference. The default value is 2, enough to fit in a Titan X Pascal GPU (12GB). You can modify this parameter according to your GPU resources. The inference speed may vary with this argument. The next table specifies the GPU expense of different batch size values. Also, if you specify more than one task in the ```--tasks``` argument or select multitask inference, then the same batch size will be used for all the tasks.
 
-5) ```--num_workers``` (Optional) This arguments defines the number of workers to for data loading. This argument is of special importance for the action recognition tasks as it significantly speeds inference. The default value is 2. We recomend using a higher value for action recognition inference (>=10), however, if the number of workers value increses you might have to increse the shared memory allowance of your docker when running the container (i.e. --shm-size=4G).  
+| Batch Size | Segmentation | Action Recognition |
+| ------ | ------ |
+| 2 | 10036 | 3270 |
+| 5 | 17140 | 6412 |
+| 10 | 28982 | 11648 |
+| 15 | 40820 | 16885 |
+| 20 | 52659 | 22122 |
+| 30 | 76339 | 32834 |
 
-Finally, to run the inference script with the docker image, you must run the python inference.py <argumens> on the docker container. This docker creates several new directories and files and some manual CUDA/C++ PyTorch extensions; hence, it is necessary to have the right permissions to perform these tasks. For this reason, we recommend running the cocker image without a user id to have root privileges or running with sudo permissions with a sudo user id. Now, you can run the inference code in the docker container with
+5) ```--num_workers``` (Optional) This argument defines the number of workers for data loading. This argument is of special importance for the action recognition tasks as it significantly speeds inference. The default value is 10. Hence it is necessary to increase the shared memory allowance of your container; we recommend setting ```--shm-size=3G``` when running the container. If you further increase the number of workers, you might also have to increase your docker's shared memory allowance. 
+
+Finally, to run the inference script with the docker image, you must run ```python inference.py <argumens>``` on the docker container. This docker creates several new directories and files and some manual CUDA/C++ PyTorch extensions; hence, it is necessary to have the right permissions to perform these actions. For this reason, we recommend running the cocker image without a user id to have root privileges or running with sudo permissions with a sudo user id. Now, you can run the inference code in the docker container with
 ```sh
-docker container run --rm --gpus=all --shm-size=<shared memory necessary size> \
+docker container run --rm --gpus=all --shm-size=3G \
 -v /path/to/data/dir:/data_dir/ \
 <tag-name> \
-python inference.py data_dir/test_dir data_dir/out_dir \
+python inference.py /data_dir/test_dir /data_dir/out_dir \
 --tasks <task> [or "<task1>,<task2>"]
 ```
 
 And that's all!. 
-The inference codes are set to perform inference with PyTorch on GPUs. We set the inference to use only one GPU to avoid parallelization or CUDA errors. Similarly, we set a batch size and the number of workers to 2 for all tasks to avoid memory errors; however, this might be pretty slow (2h 30min for the multitask inference according to our tests). However, the batch size and the number of workers can be changed. The docker repository has a .sh file for each possible task; inside, you can find the running settings. You can modify this setting manually and rebuild the docker image before running the code. These .sh files are inside the "III_multitask" directory for multitasking.
+The inference codes are set to perform inference with PyTorch on GPUs. We set the inference to use only one GPU to avoid parallelization or CUDA errors. As stated previously, the batch size and the number of workers can be modified with the input parameters; make sure to use the correct values to avoid out-of-memory errors. 
 
 # Running the code without docker
 
-The process is very similar if you wish to run the code without the docker. However, you first will have to install all the requirements. The main requirements are:
+The process is similar if you wish to run the code without the docker. However, you first will have to install all the requirements. The main requirements are:
 - Python >= 3.8
 - PyTorch >= 1.9
 - Torchvision and Cudatoolkit match the PyTorch version
@@ -103,7 +112,7 @@ pip install 'git+https://github.com/facebookresearch/fvcore'
 pip install -r requirements.txt
 ```
 
-After installing all the requirements, you need to download all the model weights from http://www.mydrive.com and place them in a new directory named "models" inside the main directory. Now you have to run the infirence.py script. The arguments for this script are explained in the Running the docker section. Also, take an additional note regarding some running parameters found at the end of the last section. 
+After installing all the requirements, you need to download all the model weights from https://drive.google.com/drive/folders/107NVWt-2bTZMj8dO87D2M41RKGHqfA4L?usp=sharing and place them in a new directory named "models" inside the main directory. Now you have to run the infirence.py script. The arguments for this script are explained in the Running the docker section. Also, take an additional note regarding some running parameters found at the end of the last section. 
 
 In case of any questions or inconvenience, feel free to email n.ayobi@uniandes.edu.co.
 
