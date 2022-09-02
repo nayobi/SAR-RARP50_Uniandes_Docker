@@ -1,7 +1,7 @@
 # Uniandes Team: SAR-RARP50 
 
 ### Info
-- **Memebers**: Nicol�s Ayobi, Alejandra P�rez, Santiago Rodr�guez, Juanita Puentes, Pablo Arbel�ez
+- **Memebers**: Nicolás Ayobi, Alejandra Pérez, Santiago Rodríguez, Juanita Puentes, Pablo Arbeláez
 - **Team Name**: Uniandes 
 - **Affiliation**: University of Los Andes - Center for Research and Formation in Artificial Intelligence (CinfonIA)
 - **Contact email**: n.ayobi@uniandes.edu.co
@@ -20,7 +20,7 @@ and both at the time.
 
 First, you need to have the docker image. The image can be taken from https://drive.google.com/drive/folders/107NVWt-2bTZMj8dO87D2M41RKGHqfA4L?usp=sharing. Alternatively, you can build the docker image with this repository. First, you'll need to download all the model weights at https://drive.google.com/drive/folders/107NVWt-2bTZMj8dO87D2M41RKGHqfA4L?usp=sharing and place them in a directory named "models" in this repository's main directory. After that, you can build the image by entering the main directory and running
 ```sh
-docker image build �t <tag-name> .
+docker image build -t <tag-name> .
 ```
 
 After getting the image, we can run the inference codes with docker. The Dockerfile does not have an entry point, so it is necessary to run each inference command separately. However, all tasks can be run with the inference.py script. This script has five arguments: 
@@ -51,7 +51,7 @@ test_dir:
 4) ```--batch_size``` (Optional) This argument specifies the batch size for inference. The default value is 2, enough to fit in a Titan X Pascal GPU (12GB). You can modify this parameter according to your GPU resources. The inference speed may vary with this argument. The next table specifies the GPU expense of different batch size values. Also, if you specify more than one task in the ```--tasks``` argument or select multitask inference, then the same batch size will be used for all the tasks.
 
 | Batch Size | Segmentation | Action Recognition |
-| ------ | ------ |
+| ------ | ------ | ----- |
 | 2 | 10036 | 3270 |
 | 5 | 17140 | 6412 |
 | 10 | 28982 | 11648 |
