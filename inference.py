@@ -9,7 +9,7 @@ parser.add_argument('out_dir', type=str, help='Path of directory where to deposi
 parser.add_argument('--tasks', type=str, default='action_recognition,segmentation', choices=['action_recognition','segmentation','multitask',
                                                                                 'action_recognition,segmentation','segmentation,action_recognition','segmentation,multitask','multitask,segmentation','multitask,action_recognition','action_recognition,multitask',
                                                                                 'action_recognition,segmentation,multitask','action_recognition,multitask,segmentation','segmentation,multitask,action_recognition','segmentation,action_recognition,multitask','multitask,segmentation,action_recognition','multitask,action_recognition,segmentation'], help='Task to infere')
-parser.add_argument('--batch_size', type=int, default=5, help='Batch size for inference')
+parser.add_argument('--batch_size', type=int, default=2, help='Batch size for inference')
 parser.add_argument('--num_workers', type=int, default=10, help='Number of workers for dataloading')
 
 args = parser.parse_args()
@@ -29,7 +29,7 @@ if os.getenv('WORKERS') is None or os.getenv('WORKERS') == '':
     os.environ['WORKERS'] = str(args.num_workers)
 
 tasks = args.tasks.split(',')
-assert len(tasks)<=3, 'Incorrect number of tasks inputed {}'.format(tasks)
+# assert len(tasks)<=3, 'Incorrect number of tasks inputed {}'.format(tasks)
 for task in tasks:
     if task == 'action_recognition':
         run(['sh','I_action_recognition_inference.sh'])
@@ -39,7 +39,7 @@ for task in tasks:
         run(['sh','II_segmentation_inference.sh'])
 
     elif task == 'multitask':
-        # run(['sh','make.sh'])
+        run(['sh','make.sh'])
         run(['sh','III_multitask_inference.sh'])
     elif task=='':
         print('Empty task !')

@@ -4,6 +4,7 @@ MaskFormer Training Script.
 
 This script is a simplified version of the training script in detectron2/tools.
 """
+from genericpath import isdir
 import torch
 import os
 import skimage.io as io
@@ -32,10 +33,13 @@ class Loader(torch.utils.data.Dataset):
     def getPaths(self,test_dir):
         self.im_list = []
         for video in os.listdir(test_dir):
-            for image in os.listdir(os.path.join(test_dir,video,'rgb')):
-                frame_num = int(image.split('.')[0])
-                if frame_num%60 == 0:
-                    self.im_list.append(('{}/rgb/{}'.format(video,image),video,frame_num))
+            if os.path.isdir(os.path.join(test_dir,video,'rgb')):
+                frames_list = os.listdir(os.path.join(test_dir,video,'rgb'))
+                frames_list.sort()
+                for image in frames_list:
+                    frame_num = int(image.split('.')[0])
+                    if frame_num%60 == 0:
+                        self.im_list.append(('{}/rgb/{}'.format(video,image),video,frame_num))
     
     def __len__(self):
         return len(self.im_list)

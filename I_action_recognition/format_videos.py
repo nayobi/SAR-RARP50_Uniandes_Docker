@@ -22,8 +22,8 @@ base_csv = []
 # breakpoint()
 for vid,video in tqdm(enumerate(sorted(os.listdir(osp.join(data_path))))):
     split = video.split('_')
-    if osp.isdir(osp.join(data_path,video)) and 'video_' in video:
-        assert len(split)<=3 and len(split)>=2, 'Error in split {} {}'.format(len(split),video)
+    if osp.isdir(osp.join(data_path,video,'rgb')):
+        assert len(split)<=3 and len(split)>=2, 'Error kin split {} {}'.format(len(split),video)
     
         video_frames = os.listdir(osp.join(data_path,video,'rgb'))
         video_frames.sort()

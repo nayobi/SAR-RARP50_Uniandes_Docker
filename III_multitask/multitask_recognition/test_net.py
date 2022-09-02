@@ -27,6 +27,7 @@ logger = logging.get_logger(__name__)
 
 def postprocesses_n_save(preds_dict,cfg):
     print('Beggining noise postprocessing...')
+    funct = lambda x: 2*(x[0]*x[1])/(x[1]+x[0])
 
     for video in preds_dict:
         preds_dict[video].sort(key=lambda x: x[3])
@@ -50,11 +51,11 @@ def postprocesses_n_save(preds_dict,cfg):
                         if scores[ant] > scores[nex] :
                             new_preds[idx] = cat_preds[ant]
                             arr = [scores[ant],scores[idx]]
-                            new_scores[idx] = float(np.mean(arr))
+                            new_scores[idx] = float(funct(arr))
                         elif scores[ant] < scores[nex]:
                             new_preds[idx] = cat_preds[nex]
                             arr = [scores[nex],scores[idx]]
-                            new_scores[idx] = float(np.mean(arr))
+                            new_scores[idx] = float(funct(arr))
             scores = new_scores
             cat_preds = new_preds
 

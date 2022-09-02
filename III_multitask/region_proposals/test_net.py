@@ -38,12 +38,13 @@ class Loader(torch.utils.data.Dataset):
         test_list = os.listdir(test_dir)
         test_list.sort()
         for video in test_list:
-            frames_list = os.listdir(os.path.join(test_dir,video,'rgb'))
-            frames_list.sort()
-            for image in frames_list:
-                frame_num = int(image.split('.')[0])
-                if frame_num%6 == 0:
-                    self.im_list.append(('{}/rgb/{}'.format(video,image),video,frame_num))
+            if os.path.isdir(os.path.join(test_dir,video,'rgb')):
+                frames_list = os.listdir(os.path.join(test_dir,video,'rgb'))
+                frames_list.sort()
+                for image in frames_list:
+                    frame_num = int(image.split('.')[0])
+                    if frame_num%6 == 0:
+                        self.im_list.append(('{}/rgb/{}'.format(video,image),video,frame_num))
     
     def __len__(self):
         return len(self.im_list)
